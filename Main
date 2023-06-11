@@ -1,0 +1,59 @@
+@Entity
+public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    private String name;
+    private String description;
+    private BigDecimal price;
+    
+}
+
+@Entity
+public class Category {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    private String name;
+    
+}
+
+@Repository
+public interface ProductRepository extends JpaRepository<Product, Long> {
+}
+
+@Repository
+public interface CategoryRepository extends JpaRepository<Category, Long> {
+}
+
+@Controller
+public class HomeController {
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
+
+    public HomeController(ProductRepository productRepository, CategoryRepository categoryRepository) {
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
+    }
+
+    @GetMapping("/")
+    public String home(Model model) {
+        List<Product> products = productRepository.findAll();
+        List<Category> categories = categoryRepository.findAll();
+
+        model.addAttribute("products", products);
+        model.addAttribute("categories", categories);
+
+        return "home";
+    }
+}
+
+@SpringBootApplication
+public class EcommerceApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(EcommerceApplication.class, args);
+    }
+}
+

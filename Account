@@ -50,3 +50,14 @@ public class UserController {
     }
 }
 
+@Controller
+public class UserController {
+
+    @GetMapping("/account")
+    public String account(Model model, Principal principal) {
+        String username = principal.getName();
+        User user = userRepository.findByUsername(username);
+        model.addAttribute("user", user);
+        return "account";
+    }
+}
